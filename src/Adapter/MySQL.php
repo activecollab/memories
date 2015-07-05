@@ -62,13 +62,39 @@
         if ($value === null) {
           $to_delete[] = $key;
         } else {
-          $this->query('INSERT INTO `memories` (`key`, `value`) VALUES ("' . $this->link->escape_string($key) . '", "' . $this->link->escape_string(serialize($value)) . '")');
+          if ($this->keyExists($key)) {
+            $this->update($key, $value);
+          } else {
+            $this->insert($key, $value);
+          }
         }
       }
 
       if (!empty($to_delete)) {
         $this->delete($to_delete);
       }
+    }
+
+    /**
+     * Insert a new record into the table
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    private function insert($key, $value)
+    {
+      $this->query('INSERT INTO `memories` (`key`, `value`) VALUES (' . $this->escape($key) . ', ' . $this->escape(serialize($value)) . ')');
+    }
+
+    /**
+     * Update an existing key value
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    private function update($key, $value)
+    {
+      $this->query('UPDATE `memories` SET `value` = ' . $this->escape(serialize($value)) . ' WHERE `key` = ' . $this->escape($key));
     }
 
     /**
@@ -80,6 +106,13 @@
       $this->query('DELETE FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')');
     }
 
+    /**
+     * Query database
+     *
+     * @param  string              $sql
+     * @return bool|\mysqli_result
+     * @throws \Exception
+     */
     private function query($sql)
     {
       $query_result = $this->link->query($sql);
@@ -92,10 +125,40 @@
       return $query_result;
     }
 
+    /**
+     * Return true if a memory with $key exists
+     *
+     * @param  string  $key
+     * @return boolean
+     */
+    private function keyExists($key)
+    {
+      $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . self::TABLE_NAME . '` WHERE `key` = ' . $this->escape($key));
+
+      return $result->num_rows && (integer) $result->fetch_assoc()['record_count'];
+    }
+
+    /**
+     * Escape array of keys
+     *
+     * @param  array  $keys
+     * @return string
+     */
     private function escapeKeys(array $keys)
     {
       return implode(', ', array_map(function($key) {
-        return "'" . $this->link->escape_string($key) . "'";
+        return $this->escape($key);
       }, $keys));
+    }
+
+    /**
+     * Escape a string and put it in single quotes
+     *
+     * @param  string $value
+     * @return string
+     */
+    private function escape($value)
+    {
+      return "'" . $this->link->escape_string($value) . "'";
     }
   }

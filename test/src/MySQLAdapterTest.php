@@ -57,6 +57,21 @@
     }
 
     /**
+     * Test update of existing key
+     */
+    public function testUpdateOfExistingKey()
+    {
+      $this->assertRecordsCount(0);
+
+      $this->memories->set('Key', 123);
+      $this->memories->set('Key', 456);
+
+      $this->assertRecordsCount(1);
+
+      $this->assertEquals(456, $this->memories->get('Key'));
+    }
+
+    /**
      * Test if not found returns a valid value when value is not found
      */
     public function testIfNotFoundReturnForNullValues()
@@ -90,6 +105,11 @@
       $this->assertNull($this->memories->get('Known key'));
     }
 
+    /**
+     * Check number of records in memories table
+     *
+     * @param integer $expected
+     */
     private function assertRecordsCount($expected)
     {
       $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . MySQLAdapter::TABLE_NAME . '`');
