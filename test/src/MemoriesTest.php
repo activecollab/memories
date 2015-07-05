@@ -76,4 +76,28 @@
 
       $this->assertNull($this->memories->get('Known key'));
     }
+
+    /**
+     * Make sure that keys are always trimmed
+     */
+    public function testTrimKey()
+    {
+      $this->memories->set('       A couple of spaces    ', 123);
+
+      $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
+    }
+
+    /**
+     * Make sure that keys are trimmed when we forget the value
+     */
+    public function testTrimKeyWhenForgeting()
+    {
+      $this->memories->set('       A couple of spaces    ', 123);
+
+      $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
+
+      $this->memories->forget('       A couple of spaces           ');
+
+      $this->assertNull($this->memories->get('A couple of spaces'));
+    }
   }

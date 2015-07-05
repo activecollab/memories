@@ -35,13 +35,19 @@
      */
     public function get($key, $if_not_found_return = null, $use_cache = true)
     {
-      $value = $this->adapter->read([ $key ], $use_cache)[$key];
+      $key = trim($key);
 
-      if ($value === null && $if_not_found_return !== null) {
-        $value = $if_not_found_return;
+      if ($key) {
+        $value = $this->adapter->read([ $key ], $use_cache)[$key];
+
+        if ($value === null && $if_not_found_return !== null) {
+          $value = $if_not_found_return;
+        }
+
+        return $value;
+      } else {
+        throw new InvalidArgumentException('Key is required');
       }
-
-      return $value;
     }
 
     /**
@@ -59,7 +65,7 @@
         throw new InvalidArgumentException("Characters [ and ] can't be used in keys");
       }
 
-      return $this->adapter->write([ $key => $value ], $bulk);
+      return $this->adapter->write([ trim($key) => $value ], $bulk);
     }
 
     /**
@@ -70,6 +76,6 @@
      */
     public function forget($key, $bulk = false)
     {
-      $this->adapter->delete([ $key ], $bulk);
+      $this->adapter->delete([ trim($key) ], $bulk);
     }
   }
