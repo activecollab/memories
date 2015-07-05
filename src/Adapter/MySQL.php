@@ -23,7 +23,7 @@
 
       $this->query("CREATE TABLE IF NOT EXISTS `memories` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
-        `key` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+        `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
         `value` mediumtext COLLATE utf8mb4_unicode_ci,
         `updated_on` datetime DEFAULT NULL,
         PRIMARY KEY (`id`),
@@ -38,6 +38,10 @@
      */
     public function read(array $keys, $use_cache = false)
     {
+      if (empty($keys)) {
+        return [];
+      }
+
       $result = array_fill_keys($keys, null);
 
       if ($rows = $this->query('SELECT `key`, `value` FROM memories WHERE `key` IN (' . $this->escapeKeys($keys) . ')')) {
@@ -70,9 +74,7 @@
         }
       }
 
-      if (!empty($to_delete)) {
-        $this->delete($to_delete);
-      }
+      $this->delete($to_delete);
     }
 
     /**
@@ -83,7 +85,7 @@
      */
     private function insert($key, $value)
     {
-      $this->query('INSERT INTO `memories` (`key`, `value`) VALUES (' . $this->escape($key) . ', ' . $this->escape(serialize($value)) . ')');
+      $this->query('INSERT INTO `memories` (`key`, `value`, `updated_on`) VALUES (' . $this->escape($key) . ', ' . $this->escape(serialize($value)) . ', UTC_TIMESTAMP())');
     }
 
     /**
@@ -94,7 +96,7 @@
      */
     private function update($key, $value)
     {
-      $this->query('UPDATE `memories` SET `value` = ' . $this->escape(serialize($value)) . ' WHERE `key` = ' . $this->escape($key));
+      $this->query('UPDATE `memories` SET `value` = ' . $this->escape(serialize($value)) . ', `updated_on` = UTC_TIMESTAMP() WHERE `key` = ' . $this->escape($key));
     }
 
     /**
@@ -103,7 +105,9 @@
      */
     public function delete(array $keys, $bulk = false)
     {
-      $this->query('DELETE FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')');
+      if (!empty($keys)) {
+        $this->query('DELETE FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')');
+      }
     }
 
     /**
