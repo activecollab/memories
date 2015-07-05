@@ -1,0 +1,27 @@
+{
+  "name" : "activecollab/memories",
+  "type": "library",
+  "description": "Simple key value persistence",
+  "prefer-stable": true,
+  "keywords": [ "persistence", "activecollab" ],
+  "homepage": "https://labs.activecollab.com",
+  "authors": [
+    {
+      "name": "Ilija Studen",
+      "email": "ilija.studen@activecollab.com"
+    }
+  ],
+  "require" : {
+    "php": ">=5.5.0"
+  },
+  "require-dev" : {
+    "phpunit/phpunit": "~4.1"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "ActiveCollab\\Memories\\": "src",
+      "ActiveCollab\\Memories\\Test\\": "test/src"
+    }
+  }
+}
