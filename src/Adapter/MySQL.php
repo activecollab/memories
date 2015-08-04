@@ -47,7 +47,7 @@
 
       $result = array_fill_keys($keys, null);
 
-      if ($rows = $this->query('SELECT `key`, `value` FROM memories WHERE `key` IN (' . $this->escapeKeys($keys) . ')')) {
+      if ($rows = $this->query('SELECT `key`, `value` FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')')) {
         while ($row = $rows->fetch_assoc()) {
           $result[$row['key']] = unserialize($row['value']);
         }

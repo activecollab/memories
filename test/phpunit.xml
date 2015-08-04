@@ -2,9 +2,6 @@
     <testsuites>
         <testsuite name="Memories">
             <directory>./src</directory>
-
-            <!-- Exclude -->
-            <exclude>./src/Memories/TestCase.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>
