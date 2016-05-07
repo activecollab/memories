@@ -1,30 +1,39 @@
 <?php
 
-  namespace ActiveCollab\Memories\Test;
+/*
+ * This file is part of the Active Collab Memories.
+ *
+ * (c) A51 doo <info@activecollab.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-  use ActiveCollab\Memories\Memories;
-  use InvalidArgumentException;
-  use ActiveCollab\Memories\Adapter\Test as TestAdapter;
+namespace ActiveCollab\Memories\Test;
 
-  /**
-   * Test memories
-   */
-  class MemoriesTest extends TestCase
-  {
+use ActiveCollab\Memories\Adapter\Test as TestAdapter;
+use ActiveCollab\Memories\Memories;
+use InvalidArgumentException;
+
+/**
+ * Test memories.
+ */
+class MemoriesTest extends TestCase
+{
     /**
      * @var Memories
      */
     private $memories;
 
     /**
-     * Set up before each test
+     * Set up before each test.
      */
     public function setUp()
     {
-      parent::setUp();
+        parent::setUp();
 
-      $adapter = new TestAdapter();
-      $this->memories = new Memories($adapter);
+        $adapter = new TestAdapter();
+        $this->memories = new Memories($adapter);
     }
 
     /**
@@ -32,7 +41,7 @@
      */
     public function testLeftSquareBracketsThrowAnException()
     {
-      $this->memories->set('[Something Antoher Thing', 123);
+        $this->memories->set('[Something Antoher Thing', 123);
     }
 
     /**
@@ -40,64 +49,64 @@
      */
     public function testRightSquareBracketsThrowAnException()
     {
-      $this->memories->set(']Something Antoher Thing', 123);
+        $this->memories->set(']Something Antoher Thing', 123);
     }
 
     /**
-     * Test if not found returns a valid value when value is not found
+     * Test if not found returns a valid value when value is not found.
      */
     public function testIfNotFoundReturnForNullValues()
     {
-      $this->assertNull($this->memories->get('Unknown key #1'));
-      $this->assertEquals(12, $this->memories->get('Unknown key #2', 12));
+        $this->assertNull($this->memories->get('Unknown key #1'));
+        $this->assertEquals(12, $this->memories->get('Unknown key #2', 12));
     }
 
     /**
-     * Test if system works properly when there is a value, but it is empty
+     * Test if system works properly when there is a value, but it is empty.
      */
     public function testIfNotFoundReturnIgnoresNonNullValues()
     {
-      $this->memories->set('Known key', 0);
-      $this->assertEquals(0, $this->memories->get('Known key', 12));
+        $this->memories->set('Known key', 0);
+        $this->assertEquals(0, $this->memories->get('Known key', 12));
 
-      $this->memories->set('Known key', null);
-      $this->assertEquals(12, $this->memories->get('Known key', 12));
+        $this->memories->set('Known key', null);
+        $this->assertEquals(12, $this->memories->get('Known key', 12));
     }
 
     /**
-     * Test forget
+     * Test forget.
      */
     public function testForget()
     {
-      $this->memories->set('Known key', 13);
-      $this->assertEquals(13, $this->memories->get('Known key'));
+        $this->memories->set('Known key', 13);
+        $this->assertEquals(13, $this->memories->get('Known key'));
 
-      $this->memories->forget('Known key');
+        $this->memories->forget('Known key');
 
-      $this->assertNull($this->memories->get('Known key'));
+        $this->assertNull($this->memories->get('Known key'));
     }
 
     /**
-     * Make sure that keys are always trimmed
+     * Make sure that keys are always trimmed.
      */
     public function testTrimKey()
     {
-      $this->memories->set('       A couple of spaces    ', 123);
+        $this->memories->set('       A couple of spaces    ', 123);
 
-      $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
+        $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
     }
 
     /**
-     * Make sure that keys are trimmed when we forget the value
+     * Make sure that keys are trimmed when we forget the value.
      */
     public function testTrimKeyWhenForgeting()
     {
-      $this->memories->set('       A couple of spaces    ', 123);
+        $this->memories->set('       A couple of spaces    ', 123);
 
-      $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
+        $this->assertEquals(123, $this->memories->get(' A couple of spaces '));
 
-      $this->memories->forget('       A couple of spaces           ');
+        $this->memories->forget('       A couple of spaces           ');
 
-      $this->assertNull($this->memories->get('A couple of spaces'));
+        $this->assertNull($this->memories->get('A couple of spaces'));
     }
-  }
+}

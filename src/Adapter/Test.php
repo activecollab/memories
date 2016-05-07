@@ -1,12 +1,21 @@
 <?php
 
-  namespace ActiveCollab\Memories\Adapter;
+/*
+ * This file is part of the Active Collab Memories.
+ *
+ * (c) A51 doo <info@activecollab.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
 
-  /**
-   * @package ActiveCollab\Memories\Adapter
-   */
-  class Test implements Adapter
-  {
+namespace ActiveCollab\Memories\Adapter;
+
+/**
+ * @package ActiveCollab\Memories\Adapter
+ */
+class Test implements Adapter
+{
     /**
      * @var array
      */
@@ -19,39 +28,39 @@
      */
     public function read(array $keys, $use_cache = false)
     {
-      $result = [];
+        $result = [];
 
-      foreach ($keys as $key) {
-        $result[$key] = array_key_exists($key, $this->data) ? $this->data[$key] : null;
-      }
+        foreach ($keys as $key) {
+            $result[$key] = array_key_exists($key, $this->data) ? $this->data[$key] : null;
+        }
 
-      return $result;
+        return $result;
     }
 
     /**
-     * @param  array   $key_value
-     * @param  boolean $bulk
+     * @param  array $key_value
+     * @param  bool  $bulk
      * @return array
      */
     public function write(array $key_value, $bulk = false)
     {
-      foreach ($key_value as $key => $value) {
-        if ($value === null) {
-          unset($this->data[$key]);
-        } else {
-          $this->data[$key] = $value;
+        foreach ($key_value as $key => $value) {
+            if ($value === null) {
+                unset($this->data[$key]);
+            } else {
+                $this->data[$key] = $value;
+            }
         }
-      }
     }
 
     /**
      * @param string[] $keys
-     * @param boolean  $bulk
+     * @param bool     $bulk
      */
     public function delete(array $keys, $bulk = false)
     {
-      foreach ($keys as $name) {
-        unset($this->data[$name]);
-      }
+        foreach ($keys as $name) {
+            unset($this->data[$name]);
+        }
     }
-  }
+}
