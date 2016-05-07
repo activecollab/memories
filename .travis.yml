@@ -10,4 +10,4 @@ install: composer install --dev
 before_script:
   # create the database
   - mysql -e 'create database activecollab_memories_test'
-script: phpunit -c test/phpunit.xml
+script: phpunit
