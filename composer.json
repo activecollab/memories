@@ -2,8 +2,10 @@
     "name": "activecollab/memories",
     "type": "library",
     "description": "Simple key value persistence",
-    "prefer-stable": true,
     "keywords": ["persistence", "activecollab"],
+    "license": "MIT",
+    "type": "library",
+    "minimum-stability": "stable",
     "homepage": "https://labs.activecollab.com",
     "authors": [
         {
@@ -19,7 +21,6 @@
         "fabpot/php-cs-fixer": "~1.0",
         "phpunit/phpunit": "~4.7"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "ActiveCollab\\Memories\\": "src",
