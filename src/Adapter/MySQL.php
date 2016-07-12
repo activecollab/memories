@@ -19,27 +19,27 @@ class MySQL implements Adapter
     const TABLE_NAME = 'memories';
 
     /**
-     * @var \MySQLi
+     * @var \mysqli
      */
     private $link;
 
     /**
-     * @param \MySQLi   $link
+     * @param \mysqli   $link
      * @param bool|true $create_table_if_missing
      */
-    public function __construct(\MySQLi &$link, $create_table_if_missing = true)
+    public function __construct(\mysqli &$link, $create_table_if_missing = true)
     {
         $this->link = $link;
 
         if ($create_table_if_missing) {
             $this->query("CREATE TABLE IF NOT EXISTS `memories` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-          `value` mediumtext COLLATE utf8mb4_unicode_ci,
-          `updated_on` datetime DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          UNIQUE KEY `key` (`key`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+                `value` mediumtext COLLATE utf8mb4_unicode_ci,
+                `updated_on` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `key` (`key`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
         }
     }
 
@@ -58,7 +58,7 @@ class MySQL implements Adapter
 
         if ($rows = $this->query('SELECT `key`, `value` FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')')) {
             while ($row = $rows->fetch_assoc()) {
-                $result[$row['key']] = unserialize($row['value']);
+                $result[$row['key']] = $row['value'] ? unserialize($row['value']) : null;
             }
         }
 

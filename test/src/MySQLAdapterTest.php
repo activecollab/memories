@@ -125,4 +125,13 @@ class MySQLAdapterTest extends TestCase
         $this->assertEquals(1, $result->num_rows);
         $this->assertEquals($expected, (integer) $result->fetch_assoc()['record_count']);
     }
+
+    /**
+     * Test if we get correct default value if value field is empty for some reason (unserliaze() would return false).
+     */
+    public function testDefaultValueWhenUnserializationFails()
+    {
+        $this->link->query('INSERT INTO `' . MySQLAdapter::TABLE_NAME . '` (`key`, `value`, `updated_on`) VALUES ("Key", "", UTC_TIMESTAMP)');
+        $this->assertSame(123, $this->memories->get('Key', 123));
+    }
 }
