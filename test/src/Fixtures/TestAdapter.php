@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -9,12 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ActiveCollab\Memories\Adapter;
+namespace ActiveCollab\Memories\Test\Fixtures;
+
+use ActiveCollab\Memories\Adapter\AdapterInterface;
 
 /**
  * @package ActiveCollab\Memories\Adapter
  */
-class Test implements Adapter
+class TestAdapter implements AdapterInterface
 {
     /**
      * @var array

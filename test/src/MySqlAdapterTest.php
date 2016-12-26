@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -11,13 +11,15 @@
 
 namespace ActiveCollab\Memories\Test;
 
-use ActiveCollab\Memories\Adapter\MySQL as MySQLAdapter;
+use ActiveCollab\DatabaseConnection\ConnectionFactory;
+use ActiveCollab\Memories\Adapter\MySqlAdapter;
 use ActiveCollab\Memories\Memories;
+use ActiveCollab\DatabaseConnection\ConnectionInterface;
 
 /**
  * Test memories.
  */
-class MySQLAdapterTest extends TestCase
+class MySqlAdapterTest extends TestCase
 {
     /**
      * @var Memories
@@ -25,9 +27,9 @@ class MySQLAdapterTest extends TestCase
     private $memories;
 
     /**
-     * @var \MySQLi
+     * @var ConnectionInterface
      */
-    private $link;
+    private $connection;
 
     /**
      * Set up before each test.
@@ -36,11 +38,21 @@ class MySQLAdapterTest extends TestCase
     {
         parent::setUp();
 
-        $this->link = new \MySQLi('localhost', 'root', '', 'activecollab_memories_test');
-        $this->link->query('DROP TABLE IF EXISTS `' . MySQLAdapter::TABLE_NAME . '`');
+        $this->connection = (new ConnectionFactory())->mysqli('localhost', 'root', '', 'activecollab_memories_test', 'utf8mb4');
+        $this->connection->dropTable(MySqlAdapter::TABLE_NAME);
 
-        $adapter = new MySQLAdapter($this->link);
+        $adapter = new MySqlAdapter($this->connection);
+        $this->assertTrue($this->connection->tableExists(MySqlAdapter::TABLE_NAME));
+
         $this->memories = new Memories($adapter);
+    }
+
+    public function tearDown()
+    {
+        $this->connection->dropTable(MySqlAdapter::TABLE_NAME);
+        $this->connection->disconnect();
+
+        parent::tearDown();
     }
 
     /**
@@ -121,9 +133,8 @@ class MySQLAdapterTest extends TestCase
      */
     private function assertRecordsCount($expected)
     {
-        $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . MySQLAdapter::TABLE_NAME . '`');
-        $this->assertEquals(1, $result->num_rows);
-        $this->assertEquals($expected, (integer) $result->fetch_assoc()['record_count']);
+        $result = $this->connection->executeFirstCell('SELECT COUNT(`id`) AS "row_count" FROM `' . MySqlAdapter::TABLE_NAME . '`');
+        $this->assertEquals($expected, $result);
     }
 
     /**
@@ -131,7 +142,7 @@ class MySQLAdapterTest extends TestCase
      */
     public function testDefaultValueWhenUnserializationFails()
     {
-        $this->link->query('INSERT INTO `' . MySQLAdapter::TABLE_NAME . '` (`key`, `value`, `updated_on`) VALUES ("Key", "", UTC_TIMESTAMP)');
+        $this->connection->execute('INSERT INTO `' . MySqlAdapter::TABLE_NAME . '` (`key`, `value`, `updated_on`) VALUES ("Key", "", UTC_TIMESTAMP)');
         $this->assertSame(123, $this->memories->get('Key', 123));
     }
 }
