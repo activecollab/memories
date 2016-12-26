@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -11,7 +11,7 @@
 
 namespace ActiveCollab\Memories\Test;
 
-use ActiveCollab\Memories\Adapter\MySQL as MySQLAdapter;
+use ActiveCollab\Memories\Adapter\MySqlAdapter as MySQLAdapter;
 use ActiveCollab\Memories\Memories;
 
 /**
@@ -123,7 +123,7 @@ class MySQLAdapterTest extends TestCase
     {
         $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . MySQLAdapter::TABLE_NAME . '`');
         $this->assertEquals(1, $result->num_rows);
-        $this->assertEquals($expected, (integer) $result->fetch_assoc()['record_count']);
+        $this->assertEquals($expected, (int) $result->fetch_assoc()['record_count']);
     }
 
     /**

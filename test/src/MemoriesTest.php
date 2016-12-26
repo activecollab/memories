@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -11,7 +11,7 @@
 
 namespace ActiveCollab\Memories\Test;
 
-use ActiveCollab\Memories\Adapter\Test as TestAdapter;
+use ActiveCollab\Memories\Adapter\TestAdapter as TestAdapter;
 use ActiveCollab\Memories\Memories;
 use InvalidArgumentException;
 

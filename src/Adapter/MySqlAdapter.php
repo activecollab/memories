@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -14,7 +14,7 @@ namespace ActiveCollab\Memories\Adapter;
 /**
  * @package ActiveCollab\Memories\Adapter
  */
-class MySQL implements Adapter
+class MySqlAdapter implements AdapterInterface
 {
     const TABLE_NAME = 'memories';
 
@@ -151,7 +151,7 @@ class MySQL implements Adapter
     {
         $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . self::TABLE_NAME . '` WHERE `key` = ' . $this->escape($key));
 
-        return $result->num_rows && (integer) $result->fetch_assoc()['record_count'];
+        return $result->num_rows && (int) $result->fetch_assoc()['record_count'];
     }
 
     /**

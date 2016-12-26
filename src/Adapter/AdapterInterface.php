@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -14,7 +14,7 @@ namespace ActiveCollab\Memories\Adapter;
 /**
  * @package ActiveCollab\Memories\Adapter
  */
-interface Adapter
+interface AdapterInterface
 {
     /**
      * @param  string[]   $keys

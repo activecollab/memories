@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -11,23 +11,23 @@
 
 namespace ActiveCollab\Memories;
 
-use ActiveCollab\Memories\Adapter\Adapter;
+use ActiveCollab\Memories\Adapter\AdapterInterface;
 use InvalidArgumentException;
 
 /**
  * @package ActiveCollab
  */
-final class Memories
+final class Memories implements MemoriesInterface
 {
     /**
-     * @var Adapter
+     * @var AdapterInterface
      */
     private $adapter;
 
     /**
-     * @param Adapter $adapter
+     * @param AdapterInterface $adapter
      */
-    public function __construct(Adapter $adapter)
+    public function __construct(AdapterInterface $adapter)
     {
         $this->adapter = $adapter;
     }

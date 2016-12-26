@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Memories.
+ * This file is part of the Active Collab Memories project.
  *
  * (c) A51 doo <info@activecollab.com>
  *
@@ -9,8 +9,8 @@
  * with this source code in the file LICENSE.
  */
 
-$header = <<<EOF
-This file is part of the Active Collab Memories.
+$header = <<<'EOF'
+This file is part of the Active Collab Memories project.
 
 (c) A51 doo <info@activecollab.com>
 
