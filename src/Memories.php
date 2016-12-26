@@ -33,14 +33,7 @@ final class Memories implements MemoriesInterface
     }
 
     /**
-     * Return value that is stored under the key. If value is not found, $if_not_found_return should be returned.
-     *
-     * Set $use_cache to false if you want this method to ignore cached values
-     *
-     * @param  string     $key
-     * @param  mixed|null $if_not_found_return
-     * @param  bool       $use_cache
-     * @return mixed
+     * {@inheritdoc}
      */
     public function get($key, $if_not_found_return = null, $use_cache = true)
     {
@@ -60,13 +53,7 @@ final class Memories implements MemoriesInterface
     }
 
     /**
-     * Set a value for the given key.
-     *
-     * @param  string                   $key
-     * @param  mixed                    $value
-     * @param  bool                     $bulk
-     * @return array
-     * @throws InvalidArgumentException
+     * {@inheritdoc}
      */
     public function set($key, $value = null, $bulk = false)
     {
@@ -78,10 +65,7 @@ final class Memories implements MemoriesInterface
     }
 
     /**
-     * Forget a value that we have stored under the $key.
-     *
-     * @param string     $key
-     * @param bool|false $bulk
+     * {@inheritdoc}
      */
     public function forget($key, $bulk = false)
     {
