@@ -11,6 +11,8 @@
 
 namespace ActiveCollab\Memories\Adapter;
 
+use ActiveCollab\DatabaseConnection\ConnectionInterface;
+
 /**
  * @package ActiveCollab\Memories\Adapter
  */
@@ -19,20 +21,16 @@ class MySqlAdapter implements AdapterInterface
     const TABLE_NAME = 'memories';
 
     /**
-     * @var \mysqli
+     * @var ConnectionInterface
      */
-    private $link;
+    private $connection;
 
-    /**
-     * @param \mysqli   $link
-     * @param bool|true $create_table_if_missing
-     */
-    public function __construct(\mysqli &$link, $create_table_if_missing = true)
+    public function __construct(ConnectionInterface $connection, $create_table_if_missing = true)
     {
-        $this->link = $link;
+        $this->connection = $connection;
 
         if ($create_table_if_missing) {
-            $this->query("CREATE TABLE IF NOT EXISTS `memories` (
+            $this->connection->execute("CREATE TABLE IF NOT EXISTS `' . self::TABLE_NAME . '` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                 `value` mediumtext COLLATE utf8mb4_unicode_ci,
@@ -44,9 +42,7 @@ class MySqlAdapter implements AdapterInterface
     }
 
     /**
-     * @param  string[]   $keys
-     * @param  bool|false $use_cache
-     * @return mixed[]
+     * {@inheritdoc}
      */
     public function read(array $keys, $use_cache = false)
     {
@@ -56,8 +52,8 @@ class MySqlAdapter implements AdapterInterface
 
         $result = array_fill_keys($keys, null);
 
-        if ($rows = $this->query('SELECT `key`, `value` FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')')) {
-            while ($row = $rows->fetch_assoc()) {
+        if ($rows = $this->connection->execute('SELECT `key`, `value` FROM `' . self::TABLE_NAME . '` WHERE `key` IN ?', $keys)) {
+            foreach ($rows as $row) {
                 $result[$row['key']] = $row['value'] ? unserialize($row['value']) : null;
             }
         }
@@ -66,9 +62,7 @@ class MySqlAdapter implements AdapterInterface
     }
 
     /**
-     * @param  array $key_value
-     * @param  bool  $bulk
-     * @return array
+     * {@inheritdoc}
      */
     public function write(array $key_value, $bulk = false)
     {
@@ -90,55 +84,29 @@ class MySqlAdapter implements AdapterInterface
     }
 
     /**
-     * Insert a new record into the table.
-     *
-     * @param string $key
-     * @param mixed  $value
+     * {@inheritdoc}
      */
     private function insert($key, $value)
     {
-        $this->query('INSERT INTO `memories` (`key`, `value`, `updated_on`) VALUES (' . $this->escape($key) . ', ' . $this->escape(serialize($value)) . ', UTC_TIMESTAMP())');
+        $this->connection->execute('INSERT INTO `' . self::TABLE_NAME . '` (`key`, `value`, `updated_on`) VALUES (?, ?, UTC_TIMESTAMP())', $key, serialize($value));
     }
 
     /**
-     * Update an existing key value.
-     *
-     * @param string $key
-     * @param mixed  $value
+     * {@inheritdoc}
      */
     private function update($key, $value)
     {
-        $this->query('UPDATE `memories` SET `value` = ' . $this->escape(serialize($value)) . ', `updated_on` = UTC_TIMESTAMP() WHERE `key` = ' . $this->escape($key));
+        $this->connection->execute('UPDATE `' . self::TABLE_NAME . '` SET `value` = ?, `updated_on` = UTC_TIMESTAMP() WHERE `key` = ?', serialize($value), $key);
     }
 
     /**
-     * @param string[] $keys
-     * @param bool     $bulk
+     * {@inheritdoc}
      */
     public function delete(array $keys, $bulk = false)
     {
         if (!empty($keys)) {
-            $this->query('DELETE FROM `memories` WHERE `key` IN (' . $this->escapeKeys($keys) . ')');
+            $this->connection->execute('DELETE FROM `' . self::TABLE_NAME . '` WHERE `key` IN ?', $keys);
         }
-    }
-
-    /**
-     * Query database.
-     *
-     * @param  string              $sql
-     * @return bool|\mysqli_result
-     * @throws \Exception
-     */
-    private function query($sql)
-    {
-        $query_result = $this->link->query($sql);
-
-        // Handle query error
-        if ($query_result === false && $this->link->errno) {
-            throw new \Exception($this->link->error . '. SQL: ' . $sql);
-        }
-
-        return $query_result;
     }
 
     /**
@@ -149,32 +117,6 @@ class MySqlAdapter implements AdapterInterface
      */
     private function keyExists($key)
     {
-        $result = $this->link->query('SELECT COUNT(`id`) AS "record_count" FROM `' . self::TABLE_NAME . '` WHERE `key` = ' . $this->escape($key));
-
-        return $result->num_rows && (int) $result->fetch_assoc()['record_count'];
-    }
-
-    /**
-     * Escape array of keys.
-     *
-     * @param  array  $keys
-     * @return string
-     */
-    private function escapeKeys(array $keys)
-    {
-        return implode(', ', array_map(function ($key) {
-            return $this->escape($key);
-        }, $keys));
-    }
-
-    /**
-     * Escape a string and put it in single quotes.
-     *
-     * @param  string $value
-     * @return string
-     */
-    private function escape($value)
-    {
-        return "'" . $this->link->escape_string($value) . "'";
+        return (bool) $this->connection->count(self::TABLE_NAME, ['`key` = ?', $key]);
     }
 }

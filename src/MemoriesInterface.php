@@ -11,8 +11,6 @@
 
 namespace ActiveCollab\Memories;
 
-use InvalidArgumentException;
-
 interface MemoriesInterface
 {
     /**
@@ -30,11 +28,10 @@ interface MemoriesInterface
     /**
      * Set a value for the given key.
      *
-     * @param  string                   $key
-     * @param  mixed                    $value
-     * @param  bool                     $bulk
+     * @param  string $key
+     * @param  mixed  $value
+     * @param  bool   $bulk
      * @return array
-     * @throws InvalidArgumentException
      */
     public function set($key, $value = null, $bulk = false);
 

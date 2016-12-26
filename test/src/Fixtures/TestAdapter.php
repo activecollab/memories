@@ -9,7 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace ActiveCollab\Memories\Adapter;
+namespace ActiveCollab\Memories\Test\Fixtures;
+
+use ActiveCollab\Memories\Adapter\AdapterInterface;
 
 /**
  * @package ActiveCollab\Memories\Adapter
