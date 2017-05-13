@@ -30,7 +30,7 @@ class MySqlAdapter implements AdapterInterface
         $this->connection = $connection;
 
         if ($create_table_if_missing && !$this->connection->tableExists(self::TABLE_NAME)) {
-            $this->connection->execute("CREATE TABLE `" . self::TABLE_NAME . "` (
+            $this->connection->execute('CREATE TABLE `' . self::TABLE_NAME . "` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
                 `value` mediumtext COLLATE utf8mb4_unicode_ci,

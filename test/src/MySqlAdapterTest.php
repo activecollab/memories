@@ -12,9 +12,9 @@
 namespace ActiveCollab\Memories\Test;
 
 use ActiveCollab\DatabaseConnection\ConnectionFactory;
+use ActiveCollab\DatabaseConnection\ConnectionInterface;
 use ActiveCollab\Memories\Adapter\MySqlAdapter;
 use ActiveCollab\Memories\Memories;
-use ActiveCollab\DatabaseConnection\ConnectionInterface;
 
 /**
  * Test memories.
