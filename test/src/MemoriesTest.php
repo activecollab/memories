@@ -11,8 +11,8 @@
 
 namespace ActiveCollab\Memories\Test;
 
-use ActiveCollab\Memories\Test\Fixtures\TestAdapter as TestAdapter;
 use ActiveCollab\Memories\Memories;
+use ActiveCollab\Memories\Test\Fixtures\TestAdapter as TestAdapter;
 use InvalidArgumentException;
 
 /**
