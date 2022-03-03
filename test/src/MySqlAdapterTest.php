@@ -34,7 +34,7 @@ class MySqlAdapterTest extends TestCase
     /**
      * Set up before each test.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class MySqlAdapterTest extends TestCase
         $this->memories = new Memories($adapter);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->connection->dropTable(MySqlAdapter::TABLE_NAME);
         $this->connection->disconnect();

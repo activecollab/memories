@@ -28,7 +28,7 @@ class MemoriesTest extends TestCase
     /**
      * Set up before each test.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -36,19 +36,17 @@ class MemoriesTest extends TestCase
         $this->memories = new Memories($adapter);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testLeftSquareBracketsThrowAnException()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->memories->set('[Something Antoher Thing', 123);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testRightSquareBracketsThrowAnException()
     {
+        $this->expectException(InvalidArgumentException::class);
+
         $this->memories->set(']Something Antoher Thing', 123);
     }
 
